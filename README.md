@@ -16,7 +16,7 @@ $ gsutil -m cp -r gs://my-backups/20171203/ ./backups_20171203/ <== create this 
 
 or:
 
-$ gsutil  -m rsync -r gs://cbull-backups/20171203/ ./backups_20171203/ <== create this folder first (rsync syncs the 2 folders)
+$ gsutil  -m rsync -r gs://my-backups/20171203/ ./backups_20171203/ <== create this folder first (rsync syncs the 2 folders)
 
 6) Move this local directory to a directory in your app, at same level as app.yaml
 
