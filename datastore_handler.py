@@ -25,6 +25,7 @@ FILE_PATH       = './production_datastore_backups/backups_20171203/20171203/'
 
 FILE_ID_INDEX   = 1   # ['output', '0', 'output-0']
 FILE_NAME_INDEX = 2   # ['output', '0', 'output-0']
+
 MODEL_LOCATIONS = [
     'core.models.', 
     'django.contrib.auth.models.',
@@ -33,8 +34,8 @@ MODEL_LOCATIONS = [
     'django.contrib.sessions.models.',
     'cloudstorage.rest_api.',
     'google.appengine.ext.admin.',
-    
 ]
+
 MODEL_ALIASES   = {
     'auth_user'             : 'User',
     'core_userprofile'      : 'UserProfile',
@@ -75,7 +76,8 @@ def load_datastore_backup(request):
 
         html += '<h2>Import datastore backup files into local dev server via  &rarr;datastore_handler.py</h2> \
                 <h3>&bull; Using file path: &nbsp; {} <br/><br /> \
-                &bull; Click on the "Start Export" at the bottom to start the process.  Depending on the export size, this process can take a very long time.</h3>'.format( FILE_PATH )
+                &bull; Click on the "Start Export" at the bottom to start the process. \
+                Depending on the export size, this process can take a very long time.</h3>'.format( FILE_PATH )
 
         lst = '<ul>'
 
