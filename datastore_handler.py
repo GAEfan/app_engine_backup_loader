@@ -23,9 +23,6 @@ APP_NAME        = "dev~YOURAPPNAME"
 
 FILE_PATH       = './production_datastore_backups/backups_20171203/20171203/'
 
-FILE_ID_INDEX   = 1   # ['output', '0', 'output-0']
-FILE_NAME_INDEX = 2   # ['output', '0', 'output-0']
-
 MODEL_LOCATIONS = [
     'core.models.', 
     'django.contrib.auth.models.',
