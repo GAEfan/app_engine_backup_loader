@@ -22,9 +22,13 @@ $ gsutil  -m rsync -r gs://my-backups/20171203/ ./backups_20171203/ <== create t
 
 e.g.: /production_datastore_backups/
 
+{Before you move to the next step, you may want to back up or rename the existing local datastore file.  With the old upload methods, the backup entities would be uploaded as duplicates, doubling the entities.  This new method doesn't seem to do that, but why bother with possible data errors?  To get a fresh local datastore, start with a blank one, then upload the new files. 1) Stop your local app instance. 2) Locate the local db file.  On OSX it is a file called "dev_appserver.datastore". 3) Rename or delete this. 4) Restart local dev server.}
+
 7) To upload to dev server, navigate to:
 
 http://localhost:8000/load_datastore_backup
+
+and click the button at the bottom of the page, if all the files look correct.
 
 (Of course, you need a url handler in your app to handle this url)
 
