@@ -211,8 +211,6 @@ def export_as_csv(request):
         html += '<br /><br /><h3>For debugging, here are the files available:</h3>'
         html += '<h4>backup_info_files: </h4>{}<br /><br />'.format(backup_info_files)
         html += '<h4>backup_output_files: </h4>{}<br /><br />'.format(backup_output_files)
-        
-        
                 
         html += '</body>'
         
@@ -224,7 +222,7 @@ def export_as_csv(request):
         if not model_name:
             return HttpResponse('You forgot to choose a model', content_type='text/html')
         
-        separator = '\t'
+        #separator = '\t'
         rows = []
         
         try:
@@ -270,13 +268,6 @@ def export_as_csv(request):
         except  Exception as e:
             return HttpResponse("Error: {}\n Entity: {}".format(e, entity_proto.value_list() ))
             
-            header = []
-            row = []
-            for k,v in entity.items():
-                header.append(k)
-                row.append(v)
-            rows.append(row)
-            
 
 def groupFiles(path):
     "processes the path and returns all data files grouped by export name"
@@ -290,6 +281,3 @@ def groupFiles(path):
             split.append(f)
             files[split[0]].append(split)
     return files
-
-    
-
