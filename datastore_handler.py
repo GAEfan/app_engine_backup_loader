@@ -270,7 +270,7 @@ def export_as_csv(request):
             return response
             
         except  Exception as e:
-            return HttpResponse("Error: {}\n Entity: {}".format(e, output_file_name ))
+            return HttpResponse("Error: {}\n Output file: {}".format(e, output_file_name ))
             
 
 def groupFiles(path):
