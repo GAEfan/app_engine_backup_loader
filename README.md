@@ -35,3 +35,10 @@ and click the button at the bottom of the page, if all the files look correct.
 This was written inside a Django app, but writes directly to HTML without any template, for simplicity.  You can easily adapt to wsgi, for example.  One of the issues with Django is that datastore models have aliased names (User -> auth_user).  This handles those.  Also, this uses a method that can write the entities regardless of their model type (ndb, db, django, etc.)
 
 In testing, this is much faster and less error-prone (and less expensive!) than the old `bulkloader.py` or `appcfg.py upload_data` methods.
+
+
+EXPORT AS CSV:
+
+export_as_csv() lets you quickly export your datastore backup files in csv format.  Wire a url handler to that function.  e.g:
+
+http://localhost:8000/export_as_csv
