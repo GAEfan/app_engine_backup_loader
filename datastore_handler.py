@@ -172,6 +172,112 @@ def load_datastore_backup(request):
     return HttpResponse(html)
 
 
+def export_as_csv(request):
+    
+    backup_info_files, backup_output_files = glob_output_files(FILE_PATH)
+    
+    html = '<body>'
+    
+    if not request.method == 'POST':
+        
+        files       = groupFiles( FILE_PATH )
+        model_names = [filename.split(".")[1] for filename in backup_info_files]
+
+        html += '<h2>Export datastore backup file as CSV using  &rarr;views_datastore_handler.py</h2> \
+                <h3>&bull; Using file path: &nbsp; {} <br/><br /> \
+                &bull; Select a model, then click on the "Export as CSV" at the bottom to convert.</h3>'.format( FILE_PATH )
+
+        html += '<form id="ModelNameForm" action="" method="post">'
+        
+        for model_name in model_names:
+            html += '<input type="radio" name="modelChoice" value="{}" style="margin-left:16px;"/> {} <br />'.format(model_name, model_name)
+            
+        # only allow one submit every 2.5 seconds
+        html += '<script> \
+                    function doSubmit() { \
+                        var theButton = document.getElementById("submitButton"); \
+                        var theForm = document.getElementById("theForm"); \
+                        if (theButton.innerText == "Export as CSV") { \
+                            theButton.innerText = "Processing..."; \
+                            setTimeout(function(){ document.getElementById("submitButton").innerHTML = "Export as CSV"; }, 2500); \
+                            theForm.submit(); \
+                        } \
+                    } \
+                </script> \
+                <br /><br /> \
+                <button id="submitButton" style="padding:10px;text-align:center;" onclick="doSubmit();">Export as CSV</button> \
+                </form>'
+
+        html += '<br /><br /><h3>For debugging, here are the files available:</h3>'
+        html += '<h4>backup_info_files: </h4>{}<br /><br />'.format(backup_info_files)
+        html += '<h4>backup_output_files: </h4>{}<br /><br />'.format(backup_output_files)
+        
+        
+                
+        html += '</body>'
+        
+        return HttpResponse(html)
+                
+    else:   # POST
+    
+        model_name = request.POST.get("modelChoice")
+        if not model_name:
+            return HttpResponse('You forgot to choose a model', content_type='text/html')
+        
+        separator = '\t'
+        rows = []
+        
+        try:
+            for output_file_name in backup_output_files:
+                model_class_name = output_file_name.split("__")[1].split("/")[0]
+                if model_class_name == model_name:
+            
+                    # might be an alias:
+                    if MODEL_ALIASES.has_key(model_class_name):
+                        model_class_name = MODEL_ALIASES[model_class_name]
+        
+                    for location in MODEL_LOCATIONS:
+                        model_class = locate(location + model_class_name)
+                        if model_class:
+                            break
+                    
+                    raw = open(output_file_name, 'rb')
+                    reader = records.RecordsReader(raw)
+                
+                    response = HttpResponse(content_type='text/csv')
+                    response['Content-Disposition'] = 'attachment; filename="{}.csv"'.format(model_name)
+                    writer = csv.writer(response)
+            
+                    for record in reader:
+                        entity_proto = entity_pb.EntityProto(contents=record)
+                        entity_proto.key_.set_app( APP_NAME )
+                
+                        entity = datastore.Entity.FromPb(entity_proto, default_kind=model_class)
+                        
+                        header = []
+                        row = []
+                        for k,v in entity.items():
+                            header.append(k)
+                            row.append(v)
+                        rows.append(row)
+                        
+                    writer.writerow(header)
+                    for row in rows:
+                        writer.writerow(row)
+                            
+                    return response
+            return HttpResponse('Model not found: {}'.format(model_name), content_type='text/html')
+        except  Exception as e:
+            return HttpResponse("Error: {}\n Entity: {}".format(e, entity_proto.value_list() ))
+            
+            header = []
+            row = []
+            for k,v in entity.items():
+                header.append(k)
+                row.append(v)
+            rows.append(row)
+            
+
 def groupFiles(path):
     "processes the path and returns all data files grouped by export name"
     onlyfiles = [ f for f in listdir(path) if isfile(join(path,f)) ]
