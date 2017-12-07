@@ -211,7 +211,7 @@ def export_as_csv(request):
         html += '<br /><br /><h3>For debugging, here are the files available:</h3>'
         html += '<h4>backup_info_files: </h4>{}<br /><br />'.format(backup_info_files)
         html += '<h4>backup_output_files: </h4>{}<br /><br />'.format(backup_output_files)
-                
+            
         html += '</body>'
         
         return HttpResponse(html)
@@ -222,10 +222,17 @@ def export_as_csv(request):
         if not model_name:
             return HttpResponse('You forgot to choose a model', content_type='text/html')
         
-        #separator = '\t'
-        rows = []
+        separator = '\t'
+        header    = []
+        rows      = []
+        got_header = False
         
         try:
+            response = HttpResponse(content_type='text/csv')
+            response['Content-Disposition'] = 'attachment; filename="{}.csv"'.format(model_name)
+            writer = csv.writer(response)
+            
+            
             for output_file_name in backup_output_files:
                 model_class_name = output_file_name.split("__")[1].split("/")[0]
                 if model_class_name == model_name:
@@ -241,10 +248,6 @@ def export_as_csv(request):
                     
                     raw = open(output_file_name, 'rb')
                     reader = records.RecordsReader(raw)
-                
-                    response = HttpResponse(content_type='text/csv')
-                    response['Content-Disposition'] = 'attachment; filename="{}.csv"'.format(model_name)
-                    writer = csv.writer(response)
             
                     for record in reader:
                         entity_proto = entity_pb.EntityProto(contents=record)
@@ -252,21 +255,22 @@ def export_as_csv(request):
                 
                         entity = datastore.Entity.FromPb(entity_proto, default_kind=model_class)
                         
-                        header = []
                         row = []
                         for k,v in entity.items():
-                            header.append(k)
+                            if not got_header:
+                                header.append(k) 
                             row.append(v)
                         rows.append(row)
-                        
-                    writer.writerow(header)
-                    for row in rows:
-                        writer.writerow(row)
-                            
-                    return response
-            return HttpResponse('Model not found: {}'.format(model_name), content_type='text/html')
+                        got_header = True
+                    
+            writer.writerow(header)
+            for row in rows:
+                writer.writerow(row)
+                    
+            return response
+            
         except  Exception as e:
-            return HttpResponse("Error: {}\n Entity: {}".format(e, entity_proto.value_list() ))
+            return HttpResponse("Error: {}\n Entity: {}".format(e, output_file_name ))
             
 
 def groupFiles(path):
