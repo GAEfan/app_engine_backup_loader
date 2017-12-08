@@ -185,7 +185,7 @@ def export_as_csv(request):
         html += '<script> \
                     function doSubmit() { \
                         var theButton = document.getElementById("submitButton"); \
-                        var theForm = document.getElementById("theForm"); \
+                        var theForm = document.getElementById("ModelNameForm"); \
                         if (theButton.innerText == "Export as CSV") { \
                             theButton.innerText = "Processing..."; \
                             setTimeout(function(){ document.getElementById("submitButton").innerHTML = "Export as CSV"; }, 2500); \
@@ -211,15 +211,14 @@ def export_as_csv(request):
         if not model_name:
             return HttpResponse('You forgot to choose a model', content_type='text/html')
         
-        separator = '\t'
-        header    = []
-        rows      = []
+        header     = []
+        rows       = []
         got_header = False
         
         try:
             response = HttpResponse(content_type='text/csv')
             response['Content-Disposition'] = 'attachment; filename="{}.csv"'.format(model_name)
-            writer = csv.writer(response)
+            writer   = csv.writer(response)
             
             
             for output_file_name in backup_output_files:
@@ -235,7 +234,7 @@ def export_as_csv(request):
                         if model_class:
                             break
                     
-                    raw = open(output_file_name, 'rb')
+                    raw    = open(output_file_name, 'rb')
                     reader = records.RecordsReader(raw)
             
                     for record in reader:
