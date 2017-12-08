@@ -76,17 +76,6 @@ def load_datastore_backup(request):
                 &bull; Click on the "Start Export" at the bottom to start the process. \
                 Depending on the export size, this process can take a very long time.</h3>'.format( FILE_PATH )
 
-        lst = '<ul>'
-
-        for ename in files.keys():
-            lst += '<a href="/export/{}"> \
-                        <li>{} ({} files)</li> \
-                    </a>'.format( ename, ename, len(files[ename]) )
-
-        lst += '</ul>\n\n'
-
-        html += lst
-
         html += '<h4>Model Names:</h4>{}<br /><br />'.format(model_names)
         html += '<h4>backup_info_files: </h4>{}<br /><br />'.format(backup_info_files)
         html += '<h4>backup_output_files: </h4>{}<br /><br />'.format(backup_output_files)
