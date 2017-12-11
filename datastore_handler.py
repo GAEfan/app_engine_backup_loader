@@ -22,7 +22,7 @@ import logging
 
 APP_NAME        = "dev~YOURAPPNAME"
 
-FILE_PATH       = './production_datastore_backups/backups_20171203/20171203/'
+FILE_PATH       = './production_datastore_backups/backups_20171203/20171203/' # keep trailing slash
 
 MODEL_LOCATIONS = [
     'core.models.', 
