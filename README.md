@@ -5,7 +5,12 @@ Assumes you have already backed up your production datastore.  Here are the step
 
 1) Go to: https://ah-builtin-python-bundle-dot-YOURAPPNAME.appspot.com/_ah/datastore_admin?app_id=s~YOURAPPNAME
 2) Select the entities to back up
-3) Hit "Backup Entities".  Store to bucket (e.g.: my-backups/20171203) (Suggest a nearline bucket for cheap storage)
+3) Hit "Backup Entities".  
+
+NOTE: Previously GAE separated your "Backup name" and the model name  with a double underscore.  Now it seems they use a single underscore.  So, make sure your "Backup name" ends in a underscore. That is how we locate the model name
+
+Store to bucket with new directory (e.g.: my-backups/20171203) (Suggest a nearline bucket for cheap storage)
+
 4) To download the backups, cd to the directory you want: 
 
 $ cd /some/directory/I/like/
