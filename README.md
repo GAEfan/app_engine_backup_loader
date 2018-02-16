@@ -3,9 +3,10 @@ Fast &amp; easy way to load GAE's datastore backup files into local development 
 
 Assumes you have already backed up your production datastore.  Here are the steps if needed:
 
-1) Go to: https://ah-builtin-python-bundle-dot-YOURAPPNAME.appspot.com/_ah/datastore_admin?app_id=s~YOURAPPNAME
-2) Select the entities to back up
-3) Hit "Backup Entities".  
+1) Go to: https://console.cloud.google.com/datastore/settings?project=YOURAPPNAME and enable datastore admin
+2) Go to: https://ah-builtin-python-bundle-dot-YOURAPPNAME.appspot.com/_ah/datastore_admin?app_id=s~YOURAPPNAME
+3) Select the entities to back up
+4) Hit "Backup Entities".  
 
 NOTE: Previously GAE separated your "Backup name" and the model name  with a double underscore.  Now it seems they use a single underscore.  So, make sure your "Backup name" ends in a underscore. That is how we locate the model name
 
